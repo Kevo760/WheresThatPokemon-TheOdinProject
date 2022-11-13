@@ -1,16 +1,23 @@
 import './App.css';
-import GameImg from './components/StyledComp/GameImg';
+import GameStartBox from './components/GameStartBox';
+import PuzzleBox from './components/PuzzleBox';
 import Header from './components/StyledComp/Header';
-import ImgContainer from './components/StyledComp/ImgContainer';
 import Logo from './components/StyledComp/Logo';
-import imgLogo from './images/logo.png';
-import gameimage from './images/gameimg.png'
+import pika from './images/pika.gif'
+
 
 function App() {
+
+  const handleClick = (e) => {
+    const x = e.nativeEvent.offsetX
+    const y = e.nativeEvent.offsetY;
+    console.log(x, y)
+  };
+
   return (
     <div className="App">
-      <Header><Logo src={imgLogo} alt='logo'/></Header>
-      <ImgContainer> <GameImg src={gameimage} alt='game image' onMouseMove={(e) => console.log(e.screenY, e.screenX )}/> </ImgContainer>
+      <Header><Logo src={pika} alt='logo'/><h1>Where's that Pokemon?</h1></Header>
+      <GameStartBox />
     </div>
   );
 }
