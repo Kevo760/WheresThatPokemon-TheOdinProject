@@ -17,6 +17,7 @@ const StartButton = styled(Button)`
     background-color: rgb(252, 163, 17);
     font-size: 1.2rem;
     padding: 1rem 2rem;
+    margin-top: auto;
     &:hover {
         background-color: rgb(20, 33, 61);
     };
@@ -25,4 +26,11 @@ const StartButton = styled(Button)`
     };
 `
 
-export {Button, StartButton}
+const SubmitScoreBtn = styled(StartButton)`
+    padding: 0;
+    height: 3rem;
+    width: 100%;
+    margin-bottom: auto;
+`
+
+export {Button, StartButton, SubmitScoreBtn}

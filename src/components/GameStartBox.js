@@ -1,6 +1,6 @@
 import React from 'react'
 import { CharactersBox, CharaterProfile } from './StyledComp/Character'
-import GameBox from './StyledComp/GameBox'
+import {GameBox} from './StyledComp/GameBox'
 import scizor from '../images/scizor.png'
 import lucario from '../images/lucario.png'
 import zorua from '../images/zorua.png'
@@ -12,7 +12,7 @@ export default function GameStartBox() {
   return (
     <GameBox>
         <h1>Welcome!</h1>
-        <p>Find and tag the following Pokemons as fast as you can.</p>
+        <p>Find and tag these Pokemon as fast as you can.</p>
         <CharactersBox>
             <CharaterProfile>
                 <img src={scizor} alt='Scizor' />
