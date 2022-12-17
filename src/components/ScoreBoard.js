@@ -9,16 +9,14 @@ function ScoreBoard() {
     const [pScore, setpScore] = useState()
     const [ showScore, setShowScore ] = useState()
 
-    //  const sortScores = pScore.sort(({score:a}, {score:b}) => a-b)
-    //  const showScores = sortScores.map(player => <ScoreBoxSections key={player.id}><p>{player.name}</p><p>{player.score}</p></ScoreBoxSections>)
 
     // get score from firebase data base
     function getScores() {
         const scoreRef = collection(db, 'Scores')
         getDocs(scoreRef)
-        .then(reponse => {
-            const score = reponse.docs.map(doc => doc.data())
-            return setpScore(score[0].playerScores)
+        .then(response => {
+            const score = response.docs.map(doc => doc.data())
+            return setpScore(score)
         })
         .catch(error => console.log(error.message))
     }
@@ -28,7 +26,7 @@ function ScoreBoard() {
         // sort score by lowest value
         const sortScore = pScore.sort(({score:a}, {score:b}) => a-b)
         // setScore using scoreboxsections
-        const scores = sortScore.map(player => <ScoreBoxSections key={player.id}><p>{player.name}</p><p>{player.score}</p></ScoreBoxSections>)
+        const scores = sortScore.map(player => <ScoreBoxSections key={player.id}><p>{player.name}</p><p>{player.score}s</p></ScoreBoxSections>)
         setShowScore(scores)
     }
     

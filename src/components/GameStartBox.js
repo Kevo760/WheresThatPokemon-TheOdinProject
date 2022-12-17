@@ -5,10 +5,28 @@ import scizor from '../images/scizor.png'
 import lucario from '../images/lucario.png'
 import zorua from '../images/zorua.png'
 import { StartButton } from './StyledComp/Button'
+import { serverTimestamp, updateDoc, doc } from 'firebase/firestore'
+import { db } from '../lib/init-firebase'
 
 
 
 export default function GameStartBox() {
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Set isLoading true
+        const timeRef = doc(db, 'Time', 'startTime');
+        // update startTime via server time on firebases
+        updateDoc(timeRef, {
+            time: serverTimestamp()
+        })
+        .then(reponse => {
+            //When server gets response setLoading to false
+            console.log(timeRef)
+        })
+        .catch(error => console.log(error.message))
+    }
+
   return (
     <GameBox>
         <h1>Welcome!</h1>
@@ -30,7 +48,7 @@ export default function GameStartBox() {
             </CharaterProfile>
         </CharactersBox>
 
-        <StartButton>Start Game</StartButton>
+        <StartButton onClick={e => handleSubmit(e)}>Start Game</StartButton>
     </GameBox>
   )
 }
