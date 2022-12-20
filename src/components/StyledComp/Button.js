@@ -33,4 +33,19 @@ const SubmitScoreBtn = styled(StartButton)`
     margin-bottom: auto;
 `
 
-export {Button, StartButton, SubmitScoreBtn}
+const HeaderBtn = styled(Button)`
+    background-color: rgb(20, 33, 61);
+    color: white;
+    margin-left: auto;
+    font-weight: 400;
+    &:hover {
+        background-color: rgb(229, 229, 229);
+        color: black;
+    };
+    &:active {
+        background-color: rgb(20, 33, 61);
+        color: white;
+    };
+`
+
+export {Button, StartButton, SubmitScoreBtn, HeaderBtn}

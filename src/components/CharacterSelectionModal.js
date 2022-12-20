@@ -8,7 +8,7 @@ function CharacterSelectionModal(props) {
   const {xInput, yInput} = props
 
   return (
-        <CharacterSelectionBox xInput={xInput} yInput={yInput}>
+        <CharacterSelectionBox xInput={xInput + 'px'} yInput={yInput + 'px'}>
 
           <SelectCharacter >
             <b>Lucario</b>

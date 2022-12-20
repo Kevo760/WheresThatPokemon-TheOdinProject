@@ -11,4 +11,11 @@ const CharaterProfile = styled.div`
     flex-direction: column;
 `
 
-export {CharactersBox, CharaterProfile}
+const CharaterLeftImg = styled.img`
+    width: 4rem;
+    margin: 0;
+    padding: 0;
+    opacity: ${props => props.found ? '50%' : '100%'};
+`
+
+export {CharactersBox, CharaterProfile, CharaterLeftImg}

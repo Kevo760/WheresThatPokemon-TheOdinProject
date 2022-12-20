@@ -17,8 +17,8 @@ function PuzzleBox() {
   const selectionHandler = (e) => {
     showSelectionToggle();
     const positionChange = {
-      x: e.nativeEvent.offsetX + 'px' ,
-      y: e.nativeEvent.offsetY + 'px'
+      x: e.nativeEvent.offsetX,
+      y: e.nativeEvent.offsetY
     }
     setSelectPosition(positionChange)
   }
