@@ -4,14 +4,14 @@ const AddScoreForm = styled.form`
   width: auto;
   display: flex;
   flex-direction: column;
-  height: 13rem;
-  padding: 1.5rem;
+  height: 14rem;
+  padding: 1.1rem;
 `
 
 const ScoreNameInput = styled.input`
     width: 100%;
-    margin-top: 1rem;
     height: 3rem;
+    margin-top: 1rem;
     border-radius: .5rem;
     padding: 1rem;
     font-size: 1.2rem;

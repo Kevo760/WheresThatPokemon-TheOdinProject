@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from './StyledComp/Header'
 import { HeaderBtn } from './StyledComp/Button'
 import PuzzleBox from './PuzzleBox'
@@ -8,6 +8,9 @@ import lucario from '../images/lucario.png'
 import zorua from '../images/zorua.png'
 import scizor from '../images/scizor.png'
 import Loading from './Loading'
+import { db } from '../lib/init-firebase'
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+
 
 function GamePage() {
   const charactersInitalState = {
@@ -17,8 +20,8 @@ function GamePage() {
   }
 
   const [foundCharacter, setFoundCharacter] = useState(charactersInitalState)
-  const [addScore, setAddScore] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [addScore, setAddScore] = useState(true)
+  
 
   // change find character true by name
   const foundCharacterHandler = (name) => {
@@ -38,20 +41,45 @@ function GamePage() {
   const hideAddScore = () => {
     setAddScore(false)
   }
-  // set loading to true
-  const showLoading = () => {
-    setLoading(true)
-  }
-  // set loading to false
-  const hideLoading = () => {
-    setLoading(false)
-  }
 
   // reset whole game
   const resetGamePage = () => {
     resetFoundCharacters()
     hideAddScore()
-    hideLoading()
+  }
+
+
+
+    // get pokemon data sync method from the firestore
+    const getPokeData = async () => {
+      let allData = []
+      // get data from firebase
+      const docRef = collection(db, 'Logs')
+      const data = (await getDocs(docRef))
+      // grab multiple data and push it to allData variable
+      data.forEach((doc) => {
+        allData.push(doc.data())
+      })
+      
+      // returns if all pokemon are found via firestore data
+      return allData.every(poke => poke.found === true)
+    }
+    
+    // Resets found to false value on firestore
+  const resetAllServerFoundCharacters = async() => {
+    const lucarioRef = doc(db, 'Logs', 'lucario')
+    const zoruaRef = doc(db, 'Logs', 'zorua')
+    const scizorRef = doc(db, 'Logs', 'scizor')
+
+    await updateDoc(lucarioRef, {
+      found: false
+    })
+    await updateDoc(zoruaRef, {
+      found: false
+    })
+    await updateDoc(scizorRef, {
+      found: false
+    })
   }
 
 
@@ -66,23 +94,14 @@ function GamePage() {
           <HeaderBtn>Home</HeaderBtn>
         </Header>
 
-        {/* if loading is false and add score is true show AddScoreBox */}
-        { !loading && addScore  ?
-          <AddScoreBox />
-          :
-          null
-        }
-        {/* if loading is true show loading */}
-        { loading ?
-          <Loading />
-          :
-          null
-        }
+
         {/* If loading is false and addScore is false show puzzlebox */}
-        { !loading && !addScore ?
-          <PuzzleBox />
+        { !addScore ?
+          <PuzzleBox 
+            {...{foundCharacterHandler, resetFoundCharacters, getPokeData, showAddScore}}
+          />
           :
-          null
+          <AddScoreBox />
         }
     </div>
   )

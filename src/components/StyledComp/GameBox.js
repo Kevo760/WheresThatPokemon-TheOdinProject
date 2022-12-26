@@ -70,4 +70,5 @@ const AddScoreBoxHead = styled(ScoreBoxSections)`
 
 
 
+
 export {GameBox, ScoreBox, ScoreBoxSections, ScoreBoxHeadSection, ScoreBoxLoading, AddScoreBoxHead}

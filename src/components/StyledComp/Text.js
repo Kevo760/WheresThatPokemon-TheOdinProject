@@ -1,10 +1,14 @@
 import styled from "styled-components";
 
 
-const YourScoreText = styled.span`
-    font-size: 1.5rem;
+const YourScoreTextBox = styled.div`
+    font-size: 1.4rem;
     font-family: inherit;
     font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 `
 
-export {YourScoreText}
+export {YourScoreTextBox}

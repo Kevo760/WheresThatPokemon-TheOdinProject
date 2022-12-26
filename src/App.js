@@ -4,7 +4,6 @@ import GamePage from './components/GamePage';
 
 
 
-
 function App() {
 
   const handleClick = (e) => {
@@ -12,6 +11,10 @@ function App() {
     const y = e.nativeEvent.offsetY;
     console.log(x, y)
   };
+
+
+  
+  
 
   return (
     <div className="App">

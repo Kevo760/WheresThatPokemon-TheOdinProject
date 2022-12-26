@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import uuid from 'react-uuid'
 import { SubmitScoreBtn } from './StyledComp/Button'
 import { AddScoreForm, ScoreNameInput } from './StyledComp/Form'
 import { AddScoreBoxHead,ScoreBox} from './StyledComp/GameBox'
-import { YourScoreText } from './StyledComp/Text'
-import { collection, addDoc} from 'firebase/firestore'
+import { YourScoreTextBox } from './StyledComp/Text'
+import { collection, addDoc, doc, getDoc} from 'firebase/firestore'
 import { db } from '../lib/init-firebase'
+import LoadingImg from './StyledComp/LoadingImg'
+import loadingGif from '../images/loading.gif'
 
 
 export default function AddScoreBox() {
@@ -15,9 +17,27 @@ export default function AddScoreBox() {
     id: '',
   })
 
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [timeScore, setTimeScore] = useState()
+
+  const getScore = async() => {
+    const startTimeRef = doc(db, 'Time', 'startTime')
+    const endTimeRef = doc(db, 'Time', 'endTime')
+    const startResult = (await getDoc(startTimeRef)).data()
+    const endResult = (await getDoc(endTimeRef)).data()
+
+    const startSeconds = startResult.time
+    const endSeconds = endResult.time
+
+    const serverScore = endSeconds.seconds - startSeconds.seconds
+    setIsLoading(false)
+    setTimeScore(serverScore)
+  }
+
 
   const handleChange = (e) => {
-    setPlayerInfo({...playerInfo, name: e.target.value, id: uuid(), score: 20})
+    setPlayerInfo({...playerInfo, name: e.target.value, id: uuid()})
   }
 
   const handleSubmit = (e) => {
@@ -26,6 +46,28 @@ export default function AddScoreBox() {
     if (playerInfo.name === '') {
       return
     };
+
+    let endResult;
+    let startResult;
+
+    const startTimeRef = doc(db, 'Time', 'startTime')
+    const endTimeRef = doc(db, 'Time', 'endTime')
+    getDoc(startTimeRef)
+    .then(response => {
+      startResult = response.data()
+    })
+    .catch(error => console.log(error.message))
+
+    getDoc(endTimeRef)
+    .then(response => {
+      endResult = response.data()
+    })
+    .catch(error => console.log(error.message))
+
+    const startSeconds = startResult.time
+    const endSeconds = endResult.time
+
+    const serverScore = endSeconds.seconds - startSeconds.seconds
 
     // Adds player information
     const scoreRef = collection(db, 'Scores');
@@ -42,24 +84,41 @@ export default function AddScoreBox() {
       console.log(error.message)
     })
   }
+
+  useEffect(() => {
+    setIsLoading(true)
+  }, [])
+
+  useEffect(() => {
+    getScore()
+  }, [getScore])
+
   
   return (
     <ScoreBox>
         <AddScoreBoxHead>
             <h2>ADD YOUR SCORE</h2>
         </AddScoreBoxHead>
-        <AddScoreForm onSubmit={handleSubmit}>
-            <YourScoreText>Your Score: </YourScoreText>
+        <AddScoreForm onSubmit={e => handleSubmit(e)}>
 
-            <ScoreNameInput
-                placeholder='Enter Your Name'
-                type='text'
-                name='playername'
-                value={playerInfo.name}
-                onChange={(e) => handleChange(e)}
-            />
+          <YourScoreTextBox>
+            <span>Your Score:</span>
+            { isLoading ?
+              <LoadingImg src={loadingGif} alt='loading gif' />
+              :
+              timeScore + 's'
+            }
+          </YourScoreTextBox>
+              
+          <ScoreNameInput
+              placeholder='Enter Your Name'
+              type='text'
+              name='playername'
+              value={playerInfo.name}
+              onChange={(e) => handleChange(e)}
+           />
 
-            <SubmitScoreBtn>Submit</SubmitScoreBtn>
+            <SubmitScoreBtn disabled={false}>Submit</SubmitScoreBtn>
         </AddScoreForm>
     </ScoreBox>
   )

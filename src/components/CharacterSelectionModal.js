@@ -5,22 +5,22 @@ import zorua from '../images/zorua.png';
 import { CharacterSelectionBox, SelectCharacter, CharacterBoxImg } from './StyledComp/CharacterSelection';
 
 function CharacterSelectionModal(props) {
-  const {xInput, yInput} = props
+  const {xInput, yInput, checkLocation} = props
 
   return (
         <CharacterSelectionBox xInput={xInput + 'px'} yInput={yInput + 'px'}>
 
-          <SelectCharacter >
+          <SelectCharacter onClick={e => checkLocation('lucario', xInput, yInput)} >
             <b>Lucario</b>
             <CharacterBoxImg src={lucario} alt='lucario logo'/>
           </SelectCharacter>
 
-          <SelectCharacter>
+          <SelectCharacter onClick={e => checkLocation('scizor', xInput, yInput)}>
             <b>Scizor</b>
             <CharacterBoxImg src={scizor} alt='scizor logo' />
           </SelectCharacter>
 
-          <SelectCharacter>
+          <SelectCharacter onClick={e => checkLocation('zorua', xInput, yInput)}>
             <b>Zorua</b>
             <CharacterBoxImg src={zorua} alt='zorua logo' />
           </SelectCharacter>

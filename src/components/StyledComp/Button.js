@@ -38,9 +38,11 @@ const HeaderBtn = styled(Button)`
     color: white;
     margin-left: auto;
     font-weight: 400;
+    width: 5rem;
+    padding: .8rem;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
     &:hover {
-        background-color: rgb(229, 229, 229);
-        color: black;
+        background-color: rgb(252, 163, 17);
     };
     &:active {
         background-color: rgb(20, 33, 61);
