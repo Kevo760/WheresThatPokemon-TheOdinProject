@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Header from './StyledComp/Header'
 import { HeaderBtn } from './StyledComp/Button'
 import PuzzleBox from './PuzzleBox'
@@ -7,7 +7,6 @@ import { CharaterLeftImg } from './StyledComp/Character'
 import lucario from '../images/lucario.png'
 import zorua from '../images/zorua.png'
 import scizor from '../images/scizor.png'
-import Loading from './Loading'
 import { db } from '../lib/init-firebase'
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 
@@ -20,7 +19,7 @@ function GamePage() {
   }
 
   const [foundCharacter, setFoundCharacter] = useState(charactersInitalState)
-  const [addScore, setAddScore] = useState(true)
+  const [addScore, setAddScore] = useState(false)
   
 
   // change find character true by name
@@ -101,7 +100,9 @@ function GamePage() {
             {...{foundCharacterHandler, resetFoundCharacters, getPokeData, showAddScore}}
           />
           :
-          <AddScoreBox />
+          <AddScoreBox 
+          {...{resetAllServerFoundCharacters, resetGamePage}}
+          />
         }
     </div>
   )

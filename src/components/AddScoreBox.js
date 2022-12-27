@@ -10,7 +10,8 @@ import LoadingImg from './StyledComp/LoadingImg'
 import loadingGif from '../images/loading.gif'
 
 
-export default function AddScoreBox() {
+export default function AddScoreBox(props) {
+  const {resetAllServerFoundCharacters, resetGamePage} = props
   const [playerInfo, setPlayerInfo] = useState({
     name: '',
     score: '',
@@ -18,80 +19,82 @@ export default function AddScoreBox() {
   })
 
   const [isLoading, setIsLoading] = useState(false)
-
   const [timeScore, setTimeScore] = useState()
 
-  const getScore = async() => {
-    const startTimeRef = doc(db, 'Time', 'startTime')
-    const endTimeRef = doc(db, 'Time', 'endTime')
-    const startResult = (await getDoc(startTimeRef)).data()
-    const endResult = (await getDoc(endTimeRef)).data()
 
-    const startSeconds = startResult.time
-    const endSeconds = endResult.time
-
-    const serverScore = endSeconds.seconds - startSeconds.seconds
-    setIsLoading(false)
-    setTimeScore(serverScore)
+  // handles for data
+  const handleChange = async(e) => {
+    setPlayerInfo({...playerInfo, name: e.target.value})
   }
 
-
-  const handleChange = (e) => {
-    setPlayerInfo({...playerInfo, name: e.target.value, id: uuid()})
-  }
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     // if player name is empy return
     if (playerInfo.name === '') {
       return
     };
 
-    let endResult;
-    let startResult;
 
     const startTimeRef = doc(db, 'Time', 'startTime')
     const endTimeRef = doc(db, 'Time', 'endTime')
-    getDoc(startTimeRef)
-    .then(response => {
-      startResult = response.data()
-    })
-    .catch(error => console.log(error.message))
+    const startResult = (await getDoc(startTimeRef)).data()
+    const endResult = (await getDoc(endTimeRef)).data()
 
-    getDoc(endTimeRef)
-    .then(response => {
-      endResult = response.data()
-    })
-    .catch(error => console.log(error.message))
-
+    // grab data from time object
     const startSeconds = startResult.time
     const endSeconds = endResult.time
 
+    // calculate time for end result into seconds and minues it from start result converted to seconds
     const serverScore = endSeconds.seconds - startSeconds.seconds
+    
+    // await for setPlayerInfo to set player server score and unique id
+    await setPlayerInfo({...playerInfo, id: uuid(), score: serverScore})
 
     // Adds player information
     const scoreRef = collection(db, 'Scores');
-    addDoc(scoreRef, playerInfo)
-    .then(reponse => {
-      // reset player info once app gets a response
-      setPlayerInfo({
+    await addDoc(scoreRef, playerInfo)
+
+    // resets all found pokemon value to false on server side
+    await resetAllServerFoundCharacters()
+    
+    // reset player info once app gets a response
+    setPlayerInfo({
       name: '',
       score: '',
       id: '',
       })
-    })
-    .catch(error => {
-      console.log(error.message)
-    })
+
+    // Calls reset game page
+    resetGamePage()
   }
+    
 
   useEffect(() => {
     setIsLoading(true)
   }, [])
 
   useEffect(() => {
-    getScore()
-  }, [getScore])
+    // Gets score from the server
+  const getScore = async() => {
+    const startTimeRef = doc(db, 'Time', 'startTime')
+    const endTimeRef = doc(db, 'Time', 'endTime')
+    const startResult = (await getDoc(startTimeRef)).data()
+    const endResult = (await getDoc(endTimeRef)).data()
+
+    // grab data from time object
+    const startSeconds = startResult.time
+    const endSeconds = endResult.time
+
+    // calculate time for end result into seconds and minues it from start result converted to seconds
+    const serverScore = endSeconds.seconds - startSeconds.seconds
+    // sets loading to false
+    setIsLoading(false)
+    // sets server time score
+    setTimeScore(serverScore)
+  }
+
+  getScore()
+  })
 
   
   return (
@@ -99,7 +102,8 @@ export default function AddScoreBox() {
         <AddScoreBoxHead>
             <h2>ADD YOUR SCORE</h2>
         </AddScoreBoxHead>
-        <AddScoreForm onSubmit={e => handleSubmit(e)}>
+
+        <AddScoreForm onSubmit={e => handleSubmit(e)} >
 
           <YourScoreTextBox>
             <span>Your Score:</span>
@@ -118,7 +122,7 @@ export default function AddScoreBox() {
               onChange={(e) => handleChange(e)}
            />
 
-            <SubmitScoreBtn disabled={false}>Submit</SubmitScoreBtn>
+            <SubmitScoreBtn disabled={isLoading ? true : false}>Submit</SubmitScoreBtn>
         </AddScoreForm>
     </ScoreBox>
   )
