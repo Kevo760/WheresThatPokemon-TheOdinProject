@@ -6,6 +6,7 @@ import { useState } from 'react'
 import CharacterSelectionModal from './CharacterSelectionModal'
 import { db } from '../lib/init-firebase'
 import { doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { FoundMessage } from './MessageModal'
 
 
 function PuzzleBox(props) {
@@ -48,10 +49,10 @@ function PuzzleBox(props) {
       const result = await getPokeData()
       // If result is true show add score
       if(result) {
-        showAddScore()
         await updateDoc(timeRef, {
           time: serverTimestamp()
-        })
+        });
+        showAddScore();
       }
       // set foundCharacter style to true
       foundCharacterHandler(pokemon)

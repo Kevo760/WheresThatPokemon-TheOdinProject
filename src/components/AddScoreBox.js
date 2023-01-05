@@ -8,33 +8,19 @@ import { collection, addDoc, doc, getDoc} from 'firebase/firestore'
 import { db } from '../lib/init-firebase'
 import LoadingImg from './StyledComp/LoadingImg'
 import loadingGif from '../images/loading.gif'
+import { useNavigate } from 'react-router-dom'
 
 
 export default function AddScoreBox(props) {
-  const {resetAllServerFoundCharacters, resetGamePage} = props
-  const [playerInfo, setPlayerInfo] = useState({
-    name: '',
-    score: '',
-    id: '',
-  })
+  const { resetGamePage} = props
+  const [playerName, setPlayerName] = useState()
 
   const [isLoading, setIsLoading] = useState(false)
   const [timeScore, setTimeScore] = useState()
 
+  const navigate = useNavigate()
 
-  // handles for data
-  const handleChange = async(e) => {
-    setPlayerInfo({...playerInfo, name: e.target.value})
-  }
-
-  const handleSubmit = async(e) => {
-    e.preventDefault();
-    // if player name is empy return
-    if (playerInfo.name === '') {
-      return
-    };
-
-
+  const calculateServerTime = async() => {
     const startTimeRef = doc(db, 'Time', 'startTime')
     const endTimeRef = doc(db, 'Time', 'endTime')
     const startResult = (await getDoc(startTimeRef)).data()
@@ -46,36 +32,54 @@ export default function AddScoreBox(props) {
 
     // calculate time for end result into seconds and minues it from start result converted to seconds
     const serverScore = endSeconds.seconds - startSeconds.seconds
-    
-    // await for setPlayerInfo to set player server score and unique id
-    await setPlayerInfo({...playerInfo, id: uuid(), score: serverScore})
 
+    return serverScore
+  }
+
+
+  const addScoreToServer = async(name, id, score) => {
     // Adds player information
     const scoreRef = collection(db, 'Scores');
-    await addDoc(scoreRef, playerInfo)
+    await addDoc(scoreRef, {
+      name,
+      id,
+      score,
+    })
+  }
 
-    // resets all found pokemon value to false on server side
-    await resetAllServerFoundCharacters()
-    
-    // reset player info once app gets a response
-    setPlayerInfo({
-      name: '',
-      score: '',
-      id: '',
-      })
+
+  // handles for data
+  const handleChange = (e) => {
+    setPlayerName(e.target.value)
+  }
+
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    // if player name is empty return
+    if (playerName.name === '') {
+      return
+    };
+    // Calculate server time to serverscore 
+    const serverScore = await calculateServerTime()
+
+    // await to add score to server
+    await addScoreToServer(playerName, uuid(), serverScore)
+
+    // reset player name to empty once app gets a response
+    setPlayerName('')
 
     // Calls reset game page
     resetGamePage()
+
+    // sent to leaderboard page
+    return navigate('/leaderboard')
   }
     
 
   useEffect(() => {
     setIsLoading(true)
-  }, [])
-
-  useEffect(() => {
     // Gets score from the server
-  const getScore = async() => {
+    const getScore = async() => {
     const startTimeRef = doc(db, 'Time', 'startTime')
     const endTimeRef = doc(db, 'Time', 'endTime')
     const startResult = (await getDoc(startTimeRef)).data()
@@ -94,7 +98,8 @@ export default function AddScoreBox(props) {
   }
 
   getScore()
-  })
+  }, [])
+
 
   
   return (
@@ -103,7 +108,7 @@ export default function AddScoreBox(props) {
             <h2>ADD YOUR SCORE</h2>
         </AddScoreBoxHead>
 
-        <AddScoreForm onSubmit={e => handleSubmit(e)} >
+        <AddScoreForm onSubmit={(e) => handleSubmit(e)} >
 
           <YourScoreTextBox>
             <span>Your Score:</span>
@@ -118,7 +123,7 @@ export default function AddScoreBox(props) {
               placeholder='Enter Your Name'
               type='text'
               name='playername'
-              value={playerInfo.name}
+              value={playerName}
               onChange={(e) => handleChange(e)}
            />
 

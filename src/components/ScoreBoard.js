@@ -6,53 +6,47 @@ import LoadingImg from './StyledComp/LoadingImg'
 import loadingPB from '../images/loading.gif'
 
 function ScoreBoard() {
-    const [pScore, setpScore] = useState()
-    const [ showScore, setShowScore ] = useState()
+    const [pScore, setpScore] = useState([])
+    const [showScore, setShowScore ] = useState()
+    const [isLoading, setIsLoading] = useState(true)
 
 
-    // get score from firebase data base
-    function getScores() {
-        const scoreRef = collection(db, 'Scores')
-        getDocs(scoreRef)
-        .then(response => {
-            const score = response.docs.map(doc => doc.data())
-            return setpScore(score)
-        })
-        .catch(error => console.log(error.message))
-    }
-
-    // get showScore value
-    function getShowScore() {
-        // sort score by lowest value
+    
+    // When page loads get score
+    useEffect(() => {
+        const getServerScores = async() => {
+            const scoreRef = collection(db, 'Scores')
+            const scoreDoc = await getDocs(scoreRef)
+            const data = []
+            scoreDoc.forEach((doc) => {
+                data.push({...doc.data()})
+            })
+            setpScore(data)
+            // sort score by lowest value
         const sortScore = pScore.sort(({score:a}, {score:b}) => a-b)
         // setScore using scoreboxsections
         const scores = sortScore.map(player => <ScoreBoxSections key={player.id}><p>{player.name}</p><p>{player.score}s</p></ScoreBoxSections>)
         setShowScore(scores)
-    }
-    
-    // When page loads get score
-    useEffect(() => {
-        getScores()
-    }, [])
-
-    // if pScore is defined return getShowScore
-    useEffect(() => {
-        if(pScore) {
-            setTimeout(() => {
-                getShowScore()
-            }, 2000); 
-        }  
+        setIsLoading(false)
+        }
+        
+        getServerScores()
     }, [pScore])
-    
+
+   
+
+ 
+ 
 
 
   return (
     <ScoreBox>
         <ScoreBoxHeadSection><b>NAME</b><b>TIME(SECONDS)</b></ScoreBoxHeadSection>
         {
-            showScore ?
-            showScore :
+            isLoading ?
             <ScoreBoxLoading><LoadingImg src={loadingPB} alt='loading image'/></ScoreBoxLoading>
+            :
+            showScore
         }
     </ScoreBox>
   )

@@ -65,10 +65,33 @@ const AddScoreBoxHead = styled(ScoreBoxSections)`
   }
 `
 
+const MessageBox = styled.div`
+  width: 14rem;
+  height: 3rem;
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: .5rem;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+`
+
+const FoundMessageBox = styled(MessageBox)`
+  background-color: green;
+`
+
+const WrongMessageBox = styled(MessageBox)`
+  background-color: Tomato;
+`
 
 
 
 
 
 
-export {GameBox, ScoreBox, ScoreBoxSections, ScoreBoxHeadSection, ScoreBoxLoading, AddScoreBoxHead}
+
+export {GameBox, ScoreBox, ScoreBoxSections, ScoreBoxHeadSection, ScoreBoxLoading, AddScoreBoxHead, WrongMessageBox, FoundMessageBox}

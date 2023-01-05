@@ -1,30 +1,21 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { CharactersBox, CharaterProfile } from './StyledComp/Character'
 import {GameBox} from './StyledComp/GameBox'
 import scizor from '../images/scizor.png'
 import lucario from '../images/lucario.png'
 import zorua from '../images/zorua.png'
 import { StartButton } from './StyledComp/Button'
-import { serverTimestamp, updateDoc, doc } from 'firebase/firestore'
-import { db } from '../lib/init-firebase'
+import PageContext from './PageContext'
 
 
 
 export default function GameStartBox() {
+    const page = useContext(PageContext)
 
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async(e) => {
         e.preventDefault();
-        // Set isLoading true
-        const timeRef = doc(db, 'Time', 'startTime');
-        // update startTime via server time on firebases
-        updateDoc(timeRef, {
-            time: serverTimestamp()
-        })
-        .then(reponse => {
-            //When server gets response setLoading to false
-            console.log(timeRef)
-        })
-        .catch(error => console.log(error.message))
+        page.showGame()
     }
 
   return (

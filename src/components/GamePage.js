@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Header from './StyledComp/Header'
 import { HeaderBtn } from './StyledComp/Button'
 import PuzzleBox from './PuzzleBox'
@@ -8,8 +8,8 @@ import lucario from '../images/lucario.png'
 import zorua from '../images/zorua.png'
 import scizor from '../images/scizor.png'
 import { db } from '../lib/init-firebase'
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
-
+import { collection, doc, getDocs, updateDoc, serverTimestamp } from 'firebase/firestore';
+import pageContext from './PageContext'
 
 function GamePage() {
   const charactersInitalState = {
@@ -17,6 +17,8 @@ function GamePage() {
     scizor: false,
     zorua: false
   }
+
+  const mainPageContext = useContext(pageContext)
 
   const [foundCharacter, setFoundCharacter] = useState(charactersInitalState)
   const [addScore, setAddScore] = useState(false)
@@ -45,6 +47,12 @@ function GamePage() {
   const resetGamePage = () => {
     resetFoundCharacters()
     hideAddScore()
+  }
+
+  // resets gamepage and set show main function
+  const backToStartPage = () => {
+    resetGamePage();
+    mainPageContext.showMain()
   }
 
 
@@ -81,6 +89,19 @@ function GamePage() {
     })
   }
 
+  useEffect(() => {
+    // Updates startTime on server side when page loads
+    const startTime = async() => {
+      const timeRef = doc(db, 'Time', 'startTime');
+        await updateDoc(timeRef, {
+            time: serverTimestamp()
+        })
+    };
+
+    resetAllServerFoundCharacters()
+    startTime();
+  }, [])
+
 
   return (
     <div>
@@ -90,10 +111,8 @@ function GamePage() {
             <CharaterLeftImg found={foundCharacter.lucario} src={lucario} alt='lucario'/>
             <CharaterLeftImg found={foundCharacter.scizor} src={scizor} alt='scizor'/>
           </div>
-          <HeaderBtn>Home</HeaderBtn>
+          <HeaderBtn onClick={backToStartPage}>Home</HeaderBtn>
         </Header>
-
-
         {/* If loading is false and addScore is false show puzzlebox */}
         { !addScore ?
           <PuzzleBox 
@@ -101,9 +120,10 @@ function GamePage() {
           />
           :
           <AddScoreBox 
-          {...{resetAllServerFoundCharacters, resetGamePage}}
+          {...{resetGamePage}}
           />
         }
+
     </div>
   )
 }
