@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/WheresThatPokemon-TheOdinProject/static/css/main.82db7ee7.css",
+    "main.js": "/WheresThatPokemon-TheOdinProject/static/js/main.932bd4cc.js",
+    "static/js/787.ab378faf.chunk.js": "/WheresThatPokemon-TheOdinProject/static/js/787.ab378faf.chunk.js",
+    "static/media/gameimg.png": "/WheresThatPokemon-TheOdinProject/static/media/gameimg.89d0e28cc343b6377ff4.png",
+    "static/media/loading.gif": "/WheresThatPokemon-TheOdinProject/static/media/loading.9a151b8f3b475b518e30.gif",
+    "static/media/pika.gif": "/WheresThatPokemon-TheOdinProject/static/media/pika.c9e904693ab24e01f9c6.gif",
+    "index.html": "/WheresThatPokemon-TheOdinProject/index.html",
+    "main.82db7ee7.css.map": "/WheresThatPokemon-TheOdinProject/static/css/main.82db7ee7.css.map",
+    "main.932bd4cc.js.map": "/WheresThatPokemon-TheOdinProject/static/js/main.932bd4cc.js.map",
+    "787.ab378faf.chunk.js.map": "/WheresThatPokemon-TheOdinProject/static/js/787.ab378faf.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.82db7ee7.css",
+    "static/js/main.932bd4cc.js"
+  ]
+}
