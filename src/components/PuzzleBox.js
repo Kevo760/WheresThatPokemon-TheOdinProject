@@ -5,20 +5,23 @@ import GameImg from './StyledComp/GameImg'
 import { useState } from 'react'
 import CharacterSelectionModal from './CharacterSelectionModal'
 import { db } from '../lib/init-firebase'
-import { doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { FoundMessage } from './MessageModal'
+import { doc, getDoc, serverTimestamp, updateDoc, collection, getDocs } from 'firebase/firestore';
+import { FoundMessage, WrongMessage } from './MessageModal'
 
 
 function PuzzleBox(props) {
-  const {foundCharacterHandler, getPokeData, showAddScore} = props
+  const {foundCharacterHandler, showAddScore} = props
 
   const [showSelection, setShowSelection] = useState(false)
   const [selectionPosition, setSelectPosition] = useState({x : 0, y: 0})
+  const [displayFound, setDisplayFound] = useState(false)
+  const [displayWrong, setDisplayWrong] = useState(false)
 
   // reverse selection value
   const showSelectionToggle = () => {
     setShowSelection(prevState => !prevState)
   }
+
   // handles user click location
   const selectionHandler = (e) => {
     showSelectionToggle();
@@ -29,8 +32,23 @@ function PuzzleBox(props) {
     setSelectPosition(positionChange)
   }
 
+  /// get pokemon data sync method from the firestore
+  const getPokeData = async () => {
+    let allData = []
+    // get data from firebase
+    const docRef = collection(db, 'Logs')
+    const data = (await getDocs(docRef))
+    // grab multiple data and push it to allData variable
+    data.forEach((doc) => {
+      allData.push(doc.data())
+    })
+    
+    // returns if all pokemon are found via firestore data
+    return allData.every(poke => poke.found === true)
+  }
 
-  // check location of selected pokemon based on x and y input
+
+  //// check location of selected pokemon based on x and y input
   const checkLocation = async(pokemon, xInput, yInput) => {
     showSelectionToggle()
     const timeRef = doc(db, 'Time', 'endTime')
@@ -45,6 +63,8 @@ function PuzzleBox(props) {
       await updateDoc(pokeRef, {
         found: true
       })
+      // shows found character message
+      toggleFoundMessage()
       // await for results from getPokeData
       const result = await getPokeData()
       // If result is true show add score
@@ -56,8 +76,28 @@ function PuzzleBox(props) {
       }
       // set foundCharacter style to true
       foundCharacterHandler(pokemon)
-    } 
+    } else {
+      // toggle wrong message
+      toggleWrongMessage()
+    }
   }
+
+  ///// Toggles true for Found Message then after 1 seconds toggles to false
+  const toggleFoundMessage = () => {
+    setDisplayFound(true)
+    setTimeout(() => {
+      setDisplayFound(false)
+    }, 1000)
+  }
+  
+  ///// Toggles true for Wrong Message then after 1 seconds toggles to false
+  const toggleWrongMessage = () => {
+    setDisplayWrong(true)
+    setTimeout(() => {
+      setDisplayWrong(false)
+    }, 1000)
+  }
+  
 
   
 
@@ -66,6 +106,16 @@ function PuzzleBox(props) {
         <GameImg src={puzzleImg} alt='game image' onClick={e => selectionHandler(e)} />
         { showSelection ?
           <CharacterSelectionModal  xInput={selectionPosition.x} yInput={selectionPosition.y} checkLocation={checkLocation} />
+          :
+          null
+        }
+        { displayFound ? 
+          <FoundMessage />
+          :
+          null
+        }
+        { displayWrong ?
+          <WrongMessage />
           :
           null
         }

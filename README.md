@@ -14,7 +14,7 @@ This is a solution to the [Project: Where's Waldo (A Photo Tagging App)](https:/
   - [Continued development](#continued-development)
   - [Useful resources](#useful-resources)
 - [Author](#author)
-- [Acknowledgments](#acknowledgments)
+
 
 
 ## Overview
@@ -26,19 +26,16 @@ Users should be able to:
 - Build an app that feels a whole lot like a photo tagging app
 - When user clicks on an area of the photo, let it display a character selection box
 - Use backend to check for character location
-- Track users when photo loads and when selecting all characters through backend
+- Track users when photo loads and when selecting all characters to calculate score from the backend
+
 
 ### Screenshot
 
-![](./screenshot.jpg)
+![](./screenshots/gamestart.JPG)
+![](./screenshots/gamepage.JPG)
+![](./screenshots/userclick.JPG)
+![](./screenshots/leaderboard.JPG)
 
-Add a screenshot of your solution. The easiest way to do this is to use Firefox to view your project, right-click the page and select "Take a Screenshot". You can choose either a full-height screenshot or a cropped one based on how long the page is. If it's very long, it might be best to crop it.
-
-Alternatively, you can use a tool like [FireShot](https://getfireshot.com/) to take the screenshot. FireShot has a free option, so you don't need to purchase it. 
-
-Then crop/optimize/edit your image however you like, add it to your project, and update the file path in the image above.
-
-**Note: Delete this note and the paragraphs above when you add your screenshot. If you prefer not to add a screenshot, feel free to remove this entire section.**
 
 ### Links
 
@@ -53,60 +50,61 @@ Then crop/optimize/edit your image however you like, add it to your project, and
 - CSS custom properties
 - Flexbox
 - CSS Grid
-- Mobile-first workflow
 - [React](https://reactjs.org/) - JS library
-- [Next.js](https://nextjs.org/) - React framework
+- [Firebase](https://firebase.google.com/) - Backend server
 - [Styled Components](https://styled-components.com/) - For styles
 
-**Note: These are just examples. Delete this note and replace the list above with your own choices**
+
 
 ### What I learned
 
-Use this section to recap over some of your major learnings while working through this project. Writing these out and providing code samples of areas you want to highlight is a great way to reinforce your own knowledge.
+At first trying to figure out how firebase worked was very frustrating. It was hard to get, but after doing a few test and examples I was able to understand how to get data and send data through firebase. The getServerScores was a tough one to figure out especially I did not know how to put multiple data inside a variable from a firebsae collection. I found out you had to use the forEach then push that data to an array variable then set the state to it after. I also had a hard time in the beggining on figuring out how to get a position value of an area that a user clicks. There was a few methods to get the position value, but most of them did not give the same value when the window is resized. I found that the event.nativeEvent.offset worked no matter if the window is resized. 
 
-To see how you can add code snippets, see below:
 
-```html
-<h1>Some HTML code I'm proud of</h1>
-```
-```css
-.proud-of-this-css {
-  color: papayawhip;
-}
-```
 ```js
-const proudOfThisFunc = () => {
-  console.log('🎉')
-}
+const getServerScores = async() => {
+            const scoreRef = collection(db, 'Scores')
+            const scoreDoc = await getDocs(scoreRef)
+            const data = []
+            scoreDoc.forEach((doc) => {
+                data.push({...doc.data()})
+            })
+            setpScore(data)
+            // sort score by lowest value
+        const sortScore = pScore.sort(({score:a}, {score:b}) => a-b)
+        // setScore using scoreboxsections
+        const scores = sortScore.map(player => <ScoreBoxSections key={player.id}><p>{player.name}</p><p>{player.score}s</p></ScoreBoxSections>)
+        setShowScore(scores)
+        setIsLoading(false)
+        }
+
+const selectionHandler = (e) => {
+    showSelectionToggle();
+    const positionChange = {
+      x: e.nativeEvent.offsetX,
+      y: e.nativeEvent.offsetY
+    }
+    setSelectPosition(positionChange)
+  }
+
 ```
 
-If you want more help with writing markdown, we'd recommend checking out [The Markdown Guide](https://www.markdownguide.org/) to learn more.
-
-**Note: Delete this note and the content within this section and replace with your own learnings.**
 
 ### Continued development
 
-Use this section to outline areas that you want to continue focusing on in future projects. These could be concepts you're still not completely comfortable with or techniques you found useful that you want to refine and perfect.
+I would like to continue on learning on backend with other websites. I like the backend due to being able to store data that you do not want to user to see or get.
+I am making progress where I can easily remember how to create functions, but sometimes do need to look up things in detail. I would also like to do more Test Driven Development, So far I do testing, but function testing on console.log or creating test functions then later changing them to real functions inside the projects.  
 
-**Note: Delete this note and the content within this section and replace with your own plans for continued development.**
 
 ### Useful resources
 
-- [Example resource 1](https://www.example.com) - This helped me for XYZ reason. I really liked this pattern and will use it going forward.
-- [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
+- [Stackoverflow](https://www.stackoverflow.com) - This helped me searched for certain functions that I had forgotten and needed more information on. 
+- [Firebase](https://firebase.google.com/docs/firestore) - This is an amazing doc that allowed me to figure out the basics of firebase on how to add and remove data.
 
-**Note: Delete this note and replace the list above with resources that helped you during the challenge. These could come in handy for anyone viewing your solution or for yourself when you look back on this project in the future.**
 
 ## Author
 
-- Website - [Add your name here](https://www.your-site.com)
-- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
-- Twitter - [@yourusername](https://www.twitter.com/yourusername)
+- Twitter - [@CoverKevo](https://www.twitter.com/CoderKevo)
+- Email - [kevin760g@gmail.com]
 
-**Note: Delete this note and add/remove/edit lines above based on what links you'd like to share.**
 
-## Acknowledgments
-
-This is where you can give a hat tip to anyone who helped you out on this project. Perhaps you worked in a team or got some inspiration from someone else's solution. This is the perfect place to give them some credit.
-
-**Note: Delete this note and edit this section's content as necessary. If you completed this challenge by yourself, feel free to delete this section entirely.**

@@ -8,7 +8,7 @@ import lucario from '../images/lucario.png'
 import zorua from '../images/zorua.png'
 import scizor from '../images/scizor.png'
 import { db } from '../lib/init-firebase'
-import { collection, doc, getDocs, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import pageContext from './PageContext'
 
 function GamePage() {
@@ -55,24 +55,8 @@ function GamePage() {
     mainPageContext.showMain()
   }
 
-
-
-    // get pokemon data sync method from the firestore
-    const getPokeData = async () => {
-      let allData = []
-      // get data from firebase
-      const docRef = collection(db, 'Logs')
-      const data = (await getDocs(docRef))
-      // grab multiple data and push it to allData variable
-      data.forEach((doc) => {
-        allData.push(doc.data())
-      })
-      
-      // returns if all pokemon are found via firestore data
-      return allData.every(poke => poke.found === true)
-    }
-    
-    // Resets found to false value on firestore
+  
+  // Resets found to false value on firestore
   const resetAllServerFoundCharacters = async() => {
     const lucarioRef = doc(db, 'Logs', 'lucario')
     const zoruaRef = doc(db, 'Logs', 'zorua')
@@ -116,7 +100,7 @@ function GamePage() {
         {/* If loading is false and addScore is false show puzzlebox */}
         { !addScore ?
           <PuzzleBox 
-            {...{foundCharacterHandler, resetFoundCharacters, getPokeData, showAddScore}}
+            {...{foundCharacterHandler, resetFoundCharacters, showAddScore}}
           />
           :
           <AddScoreBox 
