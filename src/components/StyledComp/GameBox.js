@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const GameBox = styled.div`
+    margin: auto;
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -10,6 +11,7 @@ const GameBox = styled.div`
     color: rgb(20, 33, 61);
     background-color: rgb(255, 255, 255);
     border-radius: .5rem;
+    text-align: center;
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
 `
 
@@ -74,8 +76,8 @@ const MessageBox = styled.div`
   transform: translate(-50%, -50%);
   color: white;
   display: flex;
-  flex-direction: column;
   justify-content: center;
+  align-items: center;
   border-radius: .5rem;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
 `

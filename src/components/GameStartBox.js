@@ -8,7 +8,6 @@ import { StartButton } from './StyledComp/Button'
 import PageContext from './PageContext'
 
 
-
 export default function GameStartBox() {
     const page = useContext(PageContext)
 
