@@ -29,7 +29,6 @@ function PuzzleBox(props) {
       x: e.nativeEvent.offsetX,
       y: e.nativeEvent.offsetY
     }
-    console.log(positionChange)
     setSelectPosition(positionChange)
   }
 

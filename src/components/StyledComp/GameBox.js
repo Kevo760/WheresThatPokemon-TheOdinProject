@@ -4,9 +4,9 @@ const GameBox = styled.div`
     margin: auto;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    width: 25rem;
-    height: 25rem;
+    gap: 1rem;
+    width: 23rem;
+    height: 23rem;
     padding: 2rem;
     color: rgb(20, 33, 61);
     background-color: rgb(255, 255, 255);
@@ -16,7 +16,7 @@ const GameBox = styled.div`
 `
 
 const ScoreBox = styled(GameBox)`
-    width: 30rem;
+    width: 23rem;
     height: fit-content;
     overflow: hidden;
     padding: 0;
