@@ -39,8 +39,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [https://github.com/TheLegend760/WheresThatPokemon-TheOdinProject]
-- Live Site URL: [https://thelegend760.github.io/WheresThatPokemon-TheOdinProject/#/]
+- Solution URL: [https://github.com/Kevo760/WheresThatPokemon-TheOdinProject]
+- Live Site URL: [https://Kevo760.github.io/WheresThatPokemon-TheOdinProject/#/]
 
 ## My process
 
